@@ -1,29 +1,6 @@
 $(document).ready(function () {
 
-function loadUsers() {
-  $.ajax({
-    method: "GET",
-    url: "/api/users",
-  }).then(function(result) {
-    for (var i=0; i<result.length; i++) {
-      var html = `<div><h4>Username: `;
-      html += result[i].username;
-      html += "</h4><h4>Password: ";
-      html += result[i].password;
-      html += "</h4><h4>Score: ";
-      html += result[i].score;
-      html += "</h4></div>";
-      $("#users").append(html)
-    }
-  })
-}
-loadUsers();
-
-
-
-
-    $("#users").append()
-    //user login implementation
+    //user login process
     $("#login-submit-button").on("click", function (event) {
         event.preventDefault();
 
@@ -32,12 +9,12 @@ loadUsers();
             method: "GET",
             url: "/api/users"
         }).then(function (result) {
-            //define our new values
+            //store our new value variables
             var username = $("#stored-username").val();
             var password = $("#stored-password").val();
             console.log("Form user:", username, password);
 
-            //create var for our current user
+            //create variable for our current user and booleans for login tests
             var currentUser;
             var usernameCorrect = false;
             var passwordCorrect = false;
@@ -53,30 +30,34 @@ loadUsers();
                         passwordCorrect = true;
                         //user is assigned
                         currentUser = result[i];
+                        //maybe use session storage or similar here?
                         alert("Correct credentials, user logged in")
-                        console.log("Current user:", result[i])
+                        console.log("Current user:", result[i]);
                     }
                 }
             }
+            //if the username or login were incorrect, tell the user
             if (!(passwordCorrect && usernameCorrect)) {
                 alert("Invalid credentials");
             }
         })
     });
-    //new user implementation
+
+    //new user sign-up
     $("#new-user-submit-button").on("click", function (event) {
         event.preventDefault();
         $.ajax({
             method: "GET",
             url: "/api/users"
         }).then(function (result) {
-            //define our new values
+
+            //define our new value variables
             var username = $("#new-username").val();
             var password = $("#new-password").val();
             var score = 0;
             var isUsernameUnique = true;
 
-            //check to verify there is no username in the db already
+            //check to verify there is no username in the db already under the name entered
             for (var i = 0; i < result.length; i++) {
                 if (result[i].username === username) {
                     isUsernameUnique = false;
@@ -97,11 +78,34 @@ loadUsers();
                     url: "/api/user",
                     data: newUser
                 }).then(function (result) {
-                    console.log("You added a new user!");
+                    console.log("You added a new user to the db!");
                     location.reload();
                 })
             }
         })
     });
+
+    //loads all current users that have accounts
+    function loadUsers() {
+      $.ajax({
+        method: "GET",
+        url: "/api/users",
+      }).then(function(result) {
+        for (var i=0; i<result.length; i++) {
+          var html = `<hr><div><h4>Username: `;
+          html += result[i].username;
+          html += "</h4><h4>Password: ";
+          html += result[i].password;
+          html += "</h4><h4>Score: ";
+          html += result[i].score;
+          html += "</h4></div>";
+          $("#users").append(html)
+        }
+      })
+    }
+
+    //load all users on page startup
+    loadUsers();
+
 
 });
