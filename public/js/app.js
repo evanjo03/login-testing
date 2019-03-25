@@ -1,7 +1,28 @@
 $(document).ready(function () {
-    function createNewUser(userObject) {
-    }
 
+function loadUsers() {
+  $.ajax({
+    method: "GET",
+    url: "/api/users",
+  }).then(function(result) {
+    for (var i=0; i<result.length; i++) {
+      var html = `<div><h4>Username: `;
+      html += result[i].username;
+      html += "</h4><h4>Password: ";
+      html += result[i].password;
+      html += "</h4><h4>Score: ";
+      html += result[i].score;
+      html += "</h4></div>";
+      $("#users").append(html)
+    }
+  })
+}
+loadUsers();
+
+
+
+
+    $("#users").append()
     //user login implementation
     $("#login-submit-button").on("click", function (event) {
         event.preventDefault();
@@ -21,7 +42,7 @@ $(document).ready(function () {
             var usernameCorrect = false;
             var passwordCorrect = false;
 
-            //loop through each user 
+            //loop through each user
             for (var i = 0; i < result.length; i++) {
                 console.log("User:", result[i]);
                 if (result[i].username === username) {
@@ -32,6 +53,7 @@ $(document).ready(function () {
                         passwordCorrect = true;
                         //user is assigned
                         currentUser = result[i];
+                        alert("Correct credentials, user logged in")
                         console.log("Current user:", result[i])
                     }
                 }
@@ -41,7 +63,7 @@ $(document).ready(function () {
             }
         })
     });
-    //user login implementation
+    //new user implementation
     $("#new-user-submit-button").on("click", function (event) {
         event.preventDefault();
         $.ajax({
@@ -75,22 +97,11 @@ $(document).ready(function () {
                     url: "/api/user",
                     data: newUser
                 }).then(function (result) {
-                    console.log("You added a new user!")
+                    console.log("You added a new user!");
+                    location.reload();
                 })
             }
         })
     });
 
 });
-
-
-
-
-
-
-
-
-
-
-
-

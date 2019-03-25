@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "NightGames7",
+    "password": "root",
     "database": "login_test_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
